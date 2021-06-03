@@ -1,54 +1,58 @@
 package ru.gb.screen;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 import ru.gb.base.BaseScreen;
+import ru.gb.math.Rect;
+import ru.gb.sprite.Background;
+import ru.gb.sprite.Shuttle;
 
 public class MenuScreen extends BaseScreen {
 
-    private Texture shuttle;
-    private Texture background;
-    private Vector2 position;
-    private Vector2 vector;
-    private Vector2 target;
-    private float velocity = 2.5f;
+    private Texture bg;
+    private Background background;
+    private Texture sh;
+    private Shuttle shuttle;
 
     @Override
     public void show() {
         super.show();
-        shuttle = new Texture("shuttle.png");
-        position = new Vector2(250,220);
-        vector = new Vector2();
-        target = new Vector2(0,0);
-        background = new Texture("background.png");
+        bg = new Texture("textures/background.png");
+        background = new Background(bg);
+        sh = new Texture("textures/shuttle.png");
+        shuttle = new Shuttle(sh);
+    }
+
+    @Override
+    public void resize(Rect worldBounds) {
+        super.resize(worldBounds);
+        background.resize(worldBounds);
+        shuttle.resize(worldBounds);
     }
 
     @Override
     public void render(float delta) {
         super.render(delta);
-        if (!position.epsilonEquals(target, 5.0f)) position.add(vector);
         ScreenUtils.clear(0.33f, 0.45f, 0.68f, 1);
         batch.begin();
-        batch.draw(background, 0, 0, 1080, 2220);
-        batch.draw(shuttle, position.x, position.y);
+        background.draw(batch);
+        shuttle.update(delta);
+        shuttle.draw(batch);
         batch.end();
     }
 
     @Override
     public void dispose() {
         super.dispose();
-        background.dispose();
-        shuttle.dispose();
+        bg.dispose();
+        sh.dispose();
     }
 
     @Override
-    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        target.set(screenX, Gdx.graphics.getHeight() - screenY);
-        vector = target.cpy().sub(position); // когда будет много вычислений - вынести
-        vector.nor().scl(velocity);
-        return super.touchDown(screenX, screenY, pointer, button);
+    public boolean touchDown(Vector2 touch, int pointer, int button) {
+        shuttle.touchDown(touch, pointer, button);
+        return false;
     }
 }
