@@ -9,7 +9,7 @@ import ru.gb.base.Sprite;
 import ru.gb.math.Rect;
 
 public class Shuttle extends Sprite {
-
+    // lesson4 - заглушка
     private Vector2 vector;
     private Vector2 target;
     private final float velocity = 0.005f;
@@ -29,7 +29,6 @@ public class Shuttle extends Sprite {
     public void update(float delta) {
         if (target != null && !this.pos.epsilonEquals(target, 0.01f)) this.pos.add(vector);
     }
-
 
     @Override
     public boolean touchDown(Vector2 touch, int pointer, int button) {
