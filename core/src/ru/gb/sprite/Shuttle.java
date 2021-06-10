@@ -2,6 +2,8 @@ package ru.gb.sprite;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.TextureData;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
@@ -9,19 +11,18 @@ import ru.gb.base.Sprite;
 import ru.gb.math.Rect;
 
 public class Shuttle extends Sprite {
-    // lesson4 - заглушка
     private Vector2 vector;
     private Vector2 target;
     private final float velocity = 0.005f;
 
-    public Shuttle(Texture texture) {
-        super(new TextureRegion(texture));
+    public Shuttle(TextureRegion region) {
+        super(region);
     }
 
     @Override
     public void resize(Rect worldBounds) {
         super.resize(worldBounds);
-        setHeightProportion(0.08f);
+        setHeightProportion(0.15f);
         this.pos.set(worldBounds.pos);
     }
 
