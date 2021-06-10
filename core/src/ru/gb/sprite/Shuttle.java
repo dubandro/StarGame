@@ -39,4 +39,34 @@ public class Shuttle extends Sprite {
         vector.nor().scl(velocity);
         return false;
     }
+
+    @Override
+    public boolean keyDown(int keycode) {
+        target = new Vector2();
+        switch (keycode) {
+            case 21:
+            {
+                target.set(this.pos.x - 0.05f, this.pos.y);
+                break;
+            }
+            case 22:
+            {
+                target.set(this.pos.x + 0.05f, this.pos.y);
+                break;
+            }
+            case 19:
+            {
+                target.set(this.pos.x, this.pos.y + 0.05f);
+                break;
+            }
+            case 20:
+            {
+                target.set(this.pos.x, this.pos.y - 0.05f);
+                break;
+            }
+        }
+        vector = target.cpy().sub(this.pos); // когда будет много вычислений - вынести
+        vector.nor().scl(velocity);
+        return super.keyDown(keycode);
+    }
 }

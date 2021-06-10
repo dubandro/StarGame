@@ -32,9 +32,9 @@ public class GameScreen extends BaseScreen {
         bg = new Texture("textures/background.png");
         background = new Background(bg);
         atlas = new TextureAtlas("textures/mainAtlas.tpack");
-//        TextureRegion main_ship = atlas.findRegion("main_ship");
-//        main_ship.setRegionWidth(195);
-//        shuttle = new Shuttle(main_ship);
+        TextureRegion main_ship = atlas.findRegion("main_ship");
+        main_ship.setRegionWidth(195);
+        shuttle = new Shuttle(main_ship);
         stars = new Star[STAR_COUNT];
         for (int i = 0; i < stars.length; i++) {
             stars[i] = new Star(atlas);
@@ -46,7 +46,7 @@ public class GameScreen extends BaseScreen {
     public void resize(Rect worldBounds) {
         super.resize(worldBounds);
         background.resize(worldBounds);
-//        shuttle.resize(worldBounds);
+        shuttle.resize(worldBounds);
         for (Star star : stars) {
             star.resize(worldBounds);
         }
@@ -64,7 +64,6 @@ public class GameScreen extends BaseScreen {
     public void dispose() {
         super.dispose();
         bg.dispose();
-//        sh.dispose();
         atlas.dispose();
     }
 
@@ -72,7 +71,7 @@ public class GameScreen extends BaseScreen {
         for (Star star : stars) {
             star.update(delta);
         }
-//        shuttle.update(delta);
+        shuttle.update(delta);
     }
 
     private void draw() {
@@ -82,14 +81,14 @@ public class GameScreen extends BaseScreen {
         for (Star star : stars) {
             star.draw(batch);
         }
-//        shuttle.draw(batch);
+        shuttle.draw(batch);
 //        exitButton.draw(batch);
         batch.end();
     }
 
     @Override
     public boolean touchDown(Vector2 touch, int pointer, int button) {
-//        shuttle.touchDown(touch, pointer, button);
+        shuttle.touchDown(touch, pointer, button);
 //        exitButton.touchDown(touch, pointer, button);
         return false;
     }
@@ -98,5 +97,11 @@ public class GameScreen extends BaseScreen {
     public boolean touchUp(Vector2 touch, int pointer, int button) {
 //        exitButton.touchUp(touch, pointer, button);
         return false;
+    }
+
+    @Override
+    public boolean keyDown(int keycode) {
+        shuttle.keyDown(keycode);
+        return super.keyDown(keycode);
     }
 }
