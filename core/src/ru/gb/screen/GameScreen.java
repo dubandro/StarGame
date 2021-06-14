@@ -9,6 +9,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 
 import ru.gb.base.BaseScreen;
 import ru.gb.math.Rect;
+import ru.gb.pool.BulletPool;
 import ru.gb.sprite.Background;
 import ru.gb.sprite.ExitButton;
 import ru.gb.sprite.PlayButton;
@@ -17,14 +18,16 @@ import ru.gb.sprite.Star;
 
 public class GameScreen extends BaseScreen {
 
-    private static final int STAR_COUNT = 256;
+    private static final int STAR_COUNT = 400;
 
     private Texture bg;
     private Background background;
-    private Shuttle shuttle;
-//    private ExitButton exitButton;
     private TextureAtlas atlas;
+    private BulletPool bulletPool;
+    private Shuttle shuttle;
     private Star[] stars;
+
+    //    private ExitButton exitButton;
 
     @Override
     public void show() {
@@ -32,13 +35,18 @@ public class GameScreen extends BaseScreen {
         bg = new Texture("textures/background.png");
         background = new Background(bg);
         atlas = new TextureAtlas("textures/mainAtlas.tpack");
-        TextureRegion main_ship = atlas.findRegion("main_ship");
-        main_ship.setRegionWidth(195);
-        shuttle = new Shuttle(main_ship);
         stars = new Star[STAR_COUNT];
         for (int i = 0; i < stars.length; i++) {
             stars[i] = new Star(atlas);
         }
+        bulletPool = new BulletPool();
+        shuttle = new Shuttle(atlas, bulletPool);
+
+//        Аналоговый способ разрезать пополам
+//        TextureRegion mainShip = atlas.findRegion("main_ship");
+//        mainShip.setRegionWidth(195);
+//        shuttle = new Shuttle(mainShip);
+
 //        exitButton = new ExitButton(atlas);
     }
 
@@ -55,8 +63,8 @@ public class GameScreen extends BaseScreen {
 
     @Override
     public void render(float delta) {
-        super.render(delta);
         update(delta);
+        freeAllDestroyed();
         draw();
     }
 
@@ -65,6 +73,7 @@ public class GameScreen extends BaseScreen {
         super.dispose();
         bg.dispose();
         atlas.dispose();
+        bulletPool.dispose();
     }
 
     private void update(float delta) {
@@ -72,6 +81,11 @@ public class GameScreen extends BaseScreen {
             star.update(delta);
         }
         shuttle.update(delta);
+        bulletPool.updateActiveSprites(delta);
+    }
+
+    private void freeAllDestroyed() {
+        bulletPool.freeAllDestroyed();
     }
 
     private void draw() {
@@ -82,6 +96,7 @@ public class GameScreen extends BaseScreen {
             star.draw(batch);
         }
         shuttle.draw(batch);
+        bulletPool.drawActiveSprites(batch);
 //        exitButton.draw(batch);
         batch.end();
     }
@@ -95,13 +110,19 @@ public class GameScreen extends BaseScreen {
 
     @Override
     public boolean touchUp(Vector2 touch, int pointer, int button) {
-//        exitButton.touchUp(touch, pointer, button);
+        shuttle.touchUp(touch, pointer, button);
         return false;
     }
 
     @Override
     public boolean keyDown(int keycode) {
         shuttle.keyDown(keycode);
-        return super.keyDown(keycode);
+        return false;
+    }
+
+    @Override
+    public boolean keyUp(int keycode) {
+        shuttle.keyUp(keycode);
+        return false;
     }
 }

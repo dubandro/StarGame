@@ -15,7 +15,12 @@ public class Background extends Sprite {
     @Override
     public void resize(Rect worldBounds) {
         super.resize(worldBounds);
-        setHeightProportion(1f);
+        setHeightProportion(1.07f); // разобраться почему не совпадает с экраном телефона при 1.0
         this.pos.set(worldBounds.pos);
+    }
+
+    @Override
+    public void update(float delta) {
+        setHeightProportion(getHeight() + 0.0001f);
     }
 }

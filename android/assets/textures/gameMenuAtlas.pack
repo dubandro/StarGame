@@ -1,0 +1,54 @@
+
+gameMenuAtlas.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+logo1
+  rotate: false
+  xy: 1, 733
+  size: 840, 105
+  orig: 840, 105
+  offset: 0, 0
+  index: -1
+logo2
+  rotate: false
+  xy: 1, 627
+  size: 836, 104
+  orig: 836, 104
+  offset: 0, 0
+  index: -1
+btnOff
+  rotate: false
+  xy: 1, 314
+  size: 300, 311
+  orig: 300, 311
+  offset: 0, 0
+  index: -1
+btnOn
+  rotate: false
+  xy: 1, 1
+  size: 300, 311
+  orig: 300, 311
+  offset: 0, 0
+  index: -1
+btnStart
+  rotate: false
+  xy: 303, 325
+  size: 300, 300
+  orig: 300, 300
+  offset: 0, 0
+  index: -1
+btnStop
+  rotate: false
+  xy: 303, 23
+  size: 300, 300
+  orig: 300, 300
+  offset: 0, 0
+  index: -1
+star
+  rotate: false
+  xy: 843, 819
+  size: 20, 19
+  orig: 20, 19
+  offset: 0, 0
+  index: -1

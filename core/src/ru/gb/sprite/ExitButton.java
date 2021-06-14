@@ -8,11 +8,11 @@ import ru.gb.math.Rect;
 
 public class ExitButton extends ScaledButton {
 
-    private static final float HEIGHT = 0.077f;
-    private static final float PADDING = 0.02f;
+    private static final float HEIGHT = 0.2f;
+    private static final float PADDING = 0;
 
     public ExitButton(TextureAtlas atlas) {
-        super(atlas.findRegion("btExit"));
+        super(atlas.findRegion("btnStop"));
     }
 
     @Override

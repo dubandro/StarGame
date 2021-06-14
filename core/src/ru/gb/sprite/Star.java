@@ -25,7 +25,7 @@ public class Star extends Sprite {
         v = new Vector2();
 //        float vx = Rnd.nextFloat(-0.005f, 0.005f);
 //        float vy = Rnd.nextFloat(-0.1f, -0.05f);
-        float starRatio = starHeight * starHeight * 100;
+        float starRatio = starHeight * starHeight * 50;
         float vx = Rnd.nextFloat(-starRatio, starRatio); //чем меньше звезда (чем она дальше), тем меньше отклонение по х
         float vy = starRatio * (-10); //маленькие звёзды движутся медленне => эффект перспективы
         v.set(vx, vy);

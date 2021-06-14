@@ -9,13 +9,13 @@ import ru.gb.screen.GameScreen;
 
 public class PlayButton extends ScaledButton {
 
-    private static final float HEIGHT = 0.1f;
-    private static final float PADDING = 0.02f;
+    private static final float HEIGHT = 0.2f;
+    private static final float PADDING = 0;
 
     private final Game game;
 
     public PlayButton(TextureAtlas atlas, Game game) {
-        super(atlas.findRegion("btPlay"));
+        super(atlas.findRegion("btnStart"));
         this.game = game;
     }
 
