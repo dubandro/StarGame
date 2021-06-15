@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 import ru.gb.math.Rect;
-import ru.gb.screen.MenuScreen;
 import ru.gb.utils.Regions;
 
 public class Sprite extends Rect {
@@ -86,6 +85,7 @@ public class Sprite extends Rect {
     public void setScale(float scale) {
         this.scale = scale;
     }
+
     public boolean isDestroyed() {
         return destroyed;
     }

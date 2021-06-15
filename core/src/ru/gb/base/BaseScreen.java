@@ -3,6 +3,7 @@ package ru.gb.base;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Matrix4;
@@ -14,15 +15,19 @@ import ru.gb.math.Rect;
 public class BaseScreen implements Screen, InputProcessor {
 
     protected SpriteBatch batch;
-
     private Rect screenBounds;
     private Rect worldBounds;
     private Rect glBounds;
-
     private Matrix4 worldToGl;
     private Matrix3 screenToWorld;
-
     private Vector2 touch;
+
+    private Music music; // если одинаковая музыка для всех экранов
+
+    // Для передачи worldBounds по цепочке в методы которые ресайзят объекты не вначале, а по ходу игры
+    public Rect getWorldBounds() {
+        return worldBounds;
+    }
 
     @Override
     public void show() {
@@ -35,6 +40,9 @@ public class BaseScreen implements Screen, InputProcessor {
         screenToWorld = new Matrix3();
         touch = new Vector2();
         Gdx.input.setInputProcessor(this);
+        music = Gdx.audio.newMusic(Gdx.files.internal("sounds/music.mp3"));
+        music.setLooping(true);
+        music.play();
     }
 
     @Override
@@ -47,7 +55,6 @@ public class BaseScreen implements Screen, InputProcessor {
         screenBounds.setSize(width, height);
         screenBounds.setLeft(0);
         screenBounds.setBottom(0);
-
         float aspect = width / (float) height;
         worldBounds.setHeight(1f);
         worldBounds.setWidth(1f * aspect);
@@ -63,11 +70,13 @@ public class BaseScreen implements Screen, InputProcessor {
 
     @Override
     public void pause() {
+        music.pause();
         System.out.println("pause");
     }
 
     @Override
     public void resume() {
+        music.play();
         System.out.println("resume");
     }
 
@@ -80,6 +89,7 @@ public class BaseScreen implements Screen, InputProcessor {
     @Override
     public void dispose() {
         System.out.println("dispose");
+        music.dispose();
         batch.dispose();
     }
 
