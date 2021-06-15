@@ -1,18 +1,16 @@
 package ru.gb.screen;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 import ru.gb.base.BaseScreen;
 import ru.gb.math.Rect;
 import ru.gb.pool.BulletPool;
+import ru.gb.pool.EnemyPool;
 import ru.gb.sprite.Background;
-import ru.gb.sprite.ExitButton;
-import ru.gb.sprite.PlayButton;
+import ru.gb.sprite.Enemy;
 import ru.gb.sprite.Shuttle;
 import ru.gb.sprite.Star;
 
@@ -24,10 +22,10 @@ public class GameScreen extends BaseScreen {
     private Background background;
     private TextureAtlas atlas;
     private BulletPool bulletPool;
+    private EnemyPool enemyPool;
     private Shuttle shuttle;
     private Star[] stars;
-
-    //    private ExitButton exitButton;
+    private static float periodEnemyReturn; // промежуток между появлением на экране Enemy
 
     @Override
     public void show() {
@@ -41,13 +39,7 @@ public class GameScreen extends BaseScreen {
         }
         bulletPool = new BulletPool();
         shuttle = new Shuttle(atlas, bulletPool);
-
-//        Аналоговый способ разрезать пополам
-//        TextureRegion mainShip = atlas.findRegion("main_ship");
-//        mainShip.setRegionWidth(195);
-//        shuttle = new Shuttle(mainShip);
-
-//        exitButton = new ExitButton(atlas);
+        enemyPool = new EnemyPool(atlas, getWorldBounds());
     }
 
     @Override
@@ -58,7 +50,6 @@ public class GameScreen extends BaseScreen {
         for (Star star : stars) {
             star.resize(worldBounds);
         }
-//        exitButton.resize(worldBounds);
     }
 
     @Override
@@ -74,6 +65,7 @@ public class GameScreen extends BaseScreen {
         bg.dispose();
         atlas.dispose();
         bulletPool.dispose();
+        enemyPool.dispose();
     }
 
     private void update(float delta) {
@@ -82,10 +74,31 @@ public class GameScreen extends BaseScreen {
         }
         shuttle.update(delta);
         bulletPool.updateActiveSprites(delta);
+        enemyPool.updateActiveSprites(delta);
+        enemyReturn(delta);
+    }
+
+    /**
+     * Метод возвращает в игру Enemy, в будущем можно перписать логику чтоб было больше врагов
+     * Стрельба ведётся автоматической очередью при обнаружении врага на экране
+     * @param delta участвует и врасчёте периода возврата и в скорострельности корабля
+     */
+    private void enemyReturn(float delta) {
+        if (enemyPool.getActiveObjects().size() == 0) {
+            if (periodEnemyReturn > 5) {
+                Enemy enemy = enemyPool.obtain();
+                enemy.set();
+                periodEnemyReturn = 0;
+            }
+            periodEnemyReturn += delta;
+        } else {
+            shuttle.burstShoot(delta);
+        }
     }
 
     private void freeAllDestroyed() {
         bulletPool.freeAllDestroyed();
+        enemyPool.freeAllDestroyed();
     }
 
     private void draw() {
@@ -96,15 +109,14 @@ public class GameScreen extends BaseScreen {
             star.draw(batch);
         }
         shuttle.draw(batch);
+        enemyPool.drawActiveSprites(batch);
         bulletPool.drawActiveSprites(batch);
-//        exitButton.draw(batch);
         batch.end();
     }
 
     @Override
     public boolean touchDown(Vector2 touch, int pointer, int button) {
         shuttle.touchDown(touch, pointer, button);
-//        exitButton.touchDown(touch, pointer, button);
         return false;
     }
 

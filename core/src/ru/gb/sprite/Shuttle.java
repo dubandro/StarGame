@@ -1,7 +1,9 @@
 package ru.gb.sprite;
 
+
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -15,9 +17,11 @@ public class Shuttle extends Sprite {
     private static final float HEIGHT = 0.15f;
     private static final float PADDING = 0.05f;
     private static final int INVALID_POINTER = -1;
+    private static final float rateOfFire = 400; // скорострельность в минуту
+    private static float interval; // между выстрелами
 
+    private Sound shot;
     private Rect worldBounds;
-
     private boolean pressedLeft;
     private boolean pressedRight;
     private int leftPointer = INVALID_POINTER;
@@ -38,6 +42,7 @@ public class Shuttle extends Sprite {
         this.bulletRegion = atlas.findRegion("bulletMainShip");
         this.bulletV = new Vector2(0, 0.5f);
         this.bulletPos = new Vector2();
+        this.shot = Gdx.audio.newSound(Gdx.files.internal("sounds/bullet.wav"));
     }
 
     @Override
@@ -159,5 +164,14 @@ public class Shuttle extends Sprite {
         Bullet bullet = bulletPool.obtain();
         bulletPos.set(pos.x, pos.y + getHalfHeight());
         bullet.set(this, bulletRegion, bulletPos, bulletV, worldBounds, 1, 0.01f);
+        shot.play(0.1f);
+    }
+
+    public void burstShoot(float delta) {
+        if (interval >= 60/rateOfFire) {
+            shoot();
+            interval = 0;
+        }
+        interval += delta;
     }
 }
