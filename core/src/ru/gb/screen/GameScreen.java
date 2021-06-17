@@ -5,14 +5,18 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ScreenUtils;
 
+import java.util.Iterator;
+
 import ru.gb.base.BaseScreen;
 import ru.gb.math.Rect;
 import ru.gb.pool.BulletPool;
 import ru.gb.pool.EnemyPool;
 import ru.gb.sprite.Background;
-import ru.gb.sprite.Enemy;
+import ru.gb.sprite.Bullet;
+import ru.gb.sprite.EnemyShip;
 import ru.gb.sprite.Shuttle;
 import ru.gb.sprite.Star;
+import ru.gb.utils.EnemyEmitter;
 
 public class GameScreen extends BaseScreen {
 
@@ -23,6 +27,7 @@ public class GameScreen extends BaseScreen {
     private TextureAtlas atlas;
     private BulletPool bulletPool;
     private EnemyPool enemyPool;
+    private EnemyEmitter enemyEmitter;
     private Shuttle shuttle;
     private Star[] stars;
     private static float periodEnemyReturn; // промежуток между появлением на экране Enemy
@@ -39,7 +44,8 @@ public class GameScreen extends BaseScreen {
         }
         bulletPool = new BulletPool();
         shuttle = new Shuttle(atlas, bulletPool);
-        enemyPool = new EnemyPool(atlas, getWorldBounds());
+        enemyPool = new EnemyPool(getWorldBounds(), bulletPool);
+        enemyEmitter = new EnemyEmitter(getWorldBounds(), enemyPool, atlas);
     }
 
     @Override
@@ -66,6 +72,8 @@ public class GameScreen extends BaseScreen {
         atlas.dispose();
         bulletPool.dispose();
         enemyPool.dispose();
+        shuttle.dispose();
+        enemyEmitter.dispose();
     }
 
     private void update(float delta) {
@@ -75,25 +83,7 @@ public class GameScreen extends BaseScreen {
         shuttle.update(delta);
         bulletPool.updateActiveSprites(delta);
         enemyPool.updateActiveSprites(delta);
-        enemyReturn(delta);
-    }
-
-    /**
-     * Метод возвращает в игру Enemy, в будущем можно перписать логику чтоб было больше врагов
-     * Стрельба ведётся автоматической очередью при обнаружении врага на экране
-     * @param delta участвует и врасчёте периода возврата и в скорострельности корабля
-     */
-    private void enemyReturn(float delta) {
-        if (enemyPool.getActiveObjects().size() == 0) {
-            if (periodEnemyReturn > 5) {
-                Enemy enemy = enemyPool.obtain();
-                enemy.set();
-                periodEnemyReturn = 0;
-            }
-            periodEnemyReturn += delta;
-        } else {
-            shuttle.burstShoot(delta);
-        }
+        enemyEmitter.generate(delta);
     }
 
     private void freeAllDestroyed() {

@@ -1,23 +1,24 @@
 package ru.gb.pool;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 
 import ru.gb.base.SpritesPool;
 import ru.gb.math.Rect;
-import ru.gb.sprite.Enemy;
+import ru.gb.sprite.EnemyShip;
 
-public class EnemyPool extends SpritesPool<Enemy> {
+public class EnemyPool extends SpritesPool<EnemyShip> {
 
-    private TextureAtlas atlas;
     private Rect worldBounds;
+    private final BulletPool bulletPool;
 
-    public EnemyPool(TextureAtlas atlas, Rect worldBounds) {
-        this.atlas = atlas;
+    public EnemyPool(Rect worldBounds, BulletPool bulletPool) {
         this.worldBounds = worldBounds;
+        this.bulletPool = bulletPool;
     }
 
     @Override
-    protected Enemy newObject() {
-        return new Enemy(atlas, worldBounds);
+    protected EnemyShip newObject() {
+        return new EnemyShip(worldBounds, bulletPool);
     }
 }
