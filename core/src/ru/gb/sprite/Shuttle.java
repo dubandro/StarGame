@@ -9,10 +9,11 @@ import com.badlogic.gdx.math.Vector2;
 import ru.gb.base.Ship;
 import ru.gb.math.Rect;
 import ru.gb.pool.BulletPool;
+import ru.gb.pool.ExplosionPool;
 
 public class Shuttle extends Ship {
 
-    private static final float HEIGHT = 0.15f;
+    private static final float HEIGHT = 0.1f;
     private static final float PADDING = 0.05f;
     private static final int INVALID_POINTER = -1;
     private static final float FIRE_RATE = 0.2f;
@@ -28,9 +29,10 @@ public class Shuttle extends Ship {
         this.enemyDetected = enemyDetected;
     }
 
-    public Shuttle(TextureAtlas atlas, BulletPool bulletPool) {
+    public Shuttle(TextureAtlas atlas, BulletPool bulletPool, ExplosionPool explosionPool) {
         super(atlas.findRegion("main_ship"), 1, 2, 2);
         this.bulletPool = bulletPool;
+        this.explosionPool = explosionPool;
         bulletRegion = atlas.findRegion("bulletMainShip");
         bulletV = new Vector2(0, 0.5f);
         bulletPos = new Vector2();
@@ -38,7 +40,7 @@ public class Shuttle extends Ship {
         rateOfFire = FIRE_RATE;
         bulletHeight = 0.01f;
         damage = 1;
-        hp = 100;
+        hp = 1;
         setV = new Vector2(0.5f, 0);
         shipV = new Vector2();
     }
@@ -68,6 +70,7 @@ public class Shuttle extends Ship {
         bulletSound.dispose();
     }
 
+    @Override
     protected void shoot() {
         if (enemyDetected) {
             super.shoot();
@@ -127,7 +130,7 @@ public class Shuttle extends Ship {
                 moveRight();
                 break;
             case Input.Keys.UP:
-                shoot(); // TODO решить что делать с одиночными выстрелами
+                super.shoot(); // TODO решить что делать с одиночными выстрелами
                 break;
         }
         return false;

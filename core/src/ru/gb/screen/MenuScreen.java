@@ -9,11 +9,10 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import ru.gb.base.BaseScreen;
 import ru.gb.math.Rect;
 import ru.gb.sprite.Background;
-import ru.gb.sprite.ExitButton;
+import ru.gb.sprite.ButtonMenuExit;
 import ru.gb.sprite.Logo;
 import ru.gb.sprite.MenuShuttle;
-import ru.gb.sprite.PlayButton;
-import ru.gb.sprite.Shuttle;
+import ru.gb.sprite.ButtonMenuPlay;
 import ru.gb.sprite.Star;
 
 public class MenuScreen extends BaseScreen {
@@ -27,8 +26,8 @@ public class MenuScreen extends BaseScreen {
     private Background background;
     private MenuShuttle shuttle;
     private Logo logo;
-    private ExitButton exitButton;
-    private PlayButton playButton;
+    private ButtonMenuExit exitButton;
+    private ButtonMenuPlay playButton;
     private TextureAtlas atlas;
     private Star[] stars;
 
@@ -43,8 +42,8 @@ public class MenuScreen extends BaseScreen {
         background = new Background(bg);
         atlas = new TextureAtlas("textures/gameMenuAtlas.pack");
         logo = new Logo(atlas);
-        exitButton = new ExitButton(atlas);
-        playButton = new PlayButton(atlas, game);
+        exitButton = new ButtonMenuExit(atlas);
+        playButton = new ButtonMenuPlay(atlas, game);
         stars = new Star[STAR_COUNT];
         for (int i = 0; i < stars.length; i++) {
             stars[i] = new Star(atlas);

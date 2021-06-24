@@ -1,18 +1,22 @@
 package ru.gb.sprite;
 
-import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 
 import ru.gb.base.ScaledButton;
 import ru.gb.math.Rect;
+import ru.gb.screen.GameScreen;
 
-public class ExitButton extends ScaledButton {
+public class ButtonMenuPlay extends ScaledButton {
 
     private static final float HEIGHT = 0.2f;
     private static final float PADDING = 0;
 
-    public ExitButton(TextureAtlas atlas) {
-        super(atlas.findRegion("btnStop"));
+    private final Game game;
+
+    public ButtonMenuPlay(TextureAtlas atlas, Game game) {
+        super(atlas.findRegion("btnStart"));
+        this.game = game;
     }
 
     @Override
@@ -20,11 +24,11 @@ public class ExitButton extends ScaledButton {
         super.resize(worldBounds);
         setHeightProportion(HEIGHT);
         setBottom(worldBounds.getBottom() + PADDING);
-        setRight(worldBounds.getRight() - PADDING);
+        setLeft(worldBounds.getLeft() + PADDING);
     }
 
     @Override
     protected void action() {
-        Gdx.app.exit();
+        game.setScreen(new GameScreen(game));
     }
 }
