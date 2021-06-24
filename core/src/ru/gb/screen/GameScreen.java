@@ -84,6 +84,25 @@ public class GameScreen extends BaseScreen {
         bulletPool.updateActiveSprites(delta);
         enemyPool.updateActiveSprites(delta);
         enemyEmitter.generate(delta);
+        fight();
+    }
+
+    /**
+     * ДЗ №6
+     * Стрельба ведётся автоматической очередью при обнаружении врага на экране
+     * Враг уничтожается пулями шаттла и при столкновении с шаттлом
+     * @param
+     */
+    private void fight() {
+        if (enemyPool.getActiveObjects().size() != 0) {
+            shuttle.setEnemyDetected(true);
+            for (EnemyShip enemyShip : enemyPool.getActiveObjects()) {
+                for (Bullet bullet : bulletPool.getActiveObjects()) {
+                    if (bullet.getOwner() == shuttle && enemyShip.isMe(bullet.pos)) enemyShip.destroy();
+                }
+                if (enemyShip.isMe(shuttle.pos)) enemyShip.destroy();
+            }
+        } else shuttle.setEnemyDetected(false);
     }
 
     private void freeAllDestroyed() {
