@@ -13,11 +13,14 @@ import ru.gb.pool.ExplosionPool;
 
 public class Shuttle extends Ship {
 
-    private static final float HEIGHT = 0.1f;
-    private static final float PADDING = 0.05f;
+    private static final float HEIGHT = 0.12f;
+    private static final float PADDING = 0.03f;
     private static final int INVALID_POINTER = -1;
     private static final float FIRE_RATE = 0.2f;
-    private static final float VELOCITY = 0.15f;
+    private static final float BULLET_HEIGHT = 0.01f;
+    private static final float X_VELOCITY = 0.15f;
+    private static final int SHUTTLE_HP = 100;
+    private static final int SHUTTLE_DAMAGE = 1;
 
     private boolean pressedLeft;
     private boolean pressedRight;
@@ -38,9 +41,9 @@ public class Shuttle extends Ship {
         bulletPos = new Vector2();
         bulletSound = Gdx.audio.newSound(Gdx.files.internal("sounds/laser.wav"));
         rateOfFire = FIRE_RATE;
-        bulletHeight = 0.01f;
-        damage = 1;
-        hp = 1;
+        bulletHeight = BULLET_HEIGHT;
+        damage = SHUTTLE_DAMAGE;
+        hp = SHUTTLE_HP;
         setV = new Vector2(0.5f, 0);
         shipV = new Vector2();
     }
@@ -161,11 +164,11 @@ public class Shuttle extends Ship {
     }
 
     private void moveRight() {
-        shipV.set(setV).nor().scl(VELOCITY);
+        shipV.set(setV).nor().scl(X_VELOCITY);
     }
 
     private void moveLeft() {
-        shipV.set(setV).rotateDeg(180).nor().scl(VELOCITY);
+        shipV.set(setV).rotateDeg(180).nor().scl(X_VELOCITY);
     }
 
     private void stop() {

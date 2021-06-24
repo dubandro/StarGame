@@ -129,6 +129,8 @@ public class GameScreen extends BaseScreen {
      */
     private void fight() {
         List<EnemyShip> enemyShips = enemyPool.getActiveObjects();
+        List<Bullet> bullets = bulletPool.getActiveObjects();
+
         if (enemyShips.size() != 0) {
             shuttle.setEnemyDetected(true);
             for (EnemyShip enemyShip : enemyShips) {
@@ -138,26 +140,28 @@ public class GameScreen extends BaseScreen {
                     shuttle.damage(enemyShip.getDamage() * 2);
                 }
             }
-            for (Bullet bullet : bulletPool.getActiveObjects()) {
-                if (!bullet.isDestroyed()) { //TODO подумать нужна ли эта проверка
-                    if (bullet.getOwner() == shuttle) {
-                        for (EnemyShip enemyShip : enemyShips) {
-//                            if (enemyShip.isMe(bullet.pos)) {
-                            if (enemyShip.isBulletCollision(bullet)) {
-                                enemyShip.damage(bullet.getDamage());
-                                bullet.destroy();
-                            }
-                        }
-                    } else {
-//                        if (shuttle.isMe(bullet.pos)) {
-                        if (shuttle.isBulletCollision(bullet)) {
-                            shuttle.damage(bullet.getDamage());
+        }
+        else shuttle.setEnemyDetected(false);
+
+        if (bullets.size() != 0) {
+            for (Bullet bullet : bullets) {
+                if (bullet.getOwner() == shuttle) {
+                    for (EnemyShip enemyShip : enemyShips) {
+                        if (enemyShip.isMe(bullet.pos)) {
+//                        if (enemyShip.isBulletCollision(bullet)) {
+                            enemyShip.damage(bullet.getDamage());
                             bullet.destroy();
                         }
                     }
+                } else {
+                    if (shuttle.isMe(bullet.pos)) {
+//                    if (shuttle.isBulletCollision(bullet)) {
+                        shuttle.damage(bullet.getDamage());
+                        bullet.destroy();
+                    }
                 }
             }
-        } else shuttle.setEnemyDetected(false);
+        }
         if (shuttle.isDestroyed()) state = State.GAME_OVER;
     }
 
