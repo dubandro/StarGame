@@ -19,7 +19,7 @@ public class Shuttle extends Ship {
     private static final float FIRE_RATE = 0.2f;
     private static final float BULLET_HEIGHT = 0.01f;
     private static final float X_VELOCITY = 0.15f;
-    private static final int SHUTTLE_HP = 100;
+    private static final int SHUTTLE_HP = 10;
     private static final int SHUTTLE_DAMAGE = 1;
 
     private boolean pressedLeft;

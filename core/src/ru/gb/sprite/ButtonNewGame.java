@@ -16,7 +16,6 @@ public class ButtonNewGame extends ScaledButton {
     private float height;
     private float timer;
     private boolean pulse = true;
-    private boolean pulseAnimation = true;
 
     private final Game game;
 
@@ -42,43 +41,35 @@ public class ButtonNewGame extends ScaledButton {
         if (height < NORMAL_HEIGHT) {
             height += delta/10;
             if (height > NORMAL_HEIGHT) height = NORMAL_HEIGHT;
-//            setHeightProportion(height); если работает масштаб
         }
         else {
-            if (pulseAnimation) {
-                timer += delta;
-                if (timer > PULSE_PERIOD) {
-                    if (pulse) {
-                        if (height < PULSE_HEIGHT) height += 0.0005f;
-                        else {
-                            height = PULSE_HEIGHT;
-                            pulse = false;
-                        }
-                    } else {
-                        if (height > NORMAL_HEIGHT) height -= 0.0005f;
-                        else {
-                            height = NORMAL_HEIGHT;
-                            pulse = true;
-                            timer = 0;
-                        }
+            if (pressed) return;
+            timer += delta;
+            if (timer > PULSE_PERIOD) {
+                if (pulse) {
+                    if (height < PULSE_HEIGHT) height += 0.0005f;
+                    else {
+                        height = PULSE_HEIGHT;
+                        pulse = false;
                     }
-// как вариант можно менять масштаб => меньше анимации
-//                    if (timer < PULSE_PERIOD + 0.2f) {
-//                        scale = 1.1f;
-//                    } else {
-//                        if (timer < PULSE_PERIOD + 0.4f) {
-//                            scale = 1;
-//                        } else timer = 0;
-//                    }
+                } else {
+                    if (height > NORMAL_HEIGHT) height -= 0.0005f;
+                    else {
+                        height = NORMAL_HEIGHT;
+                        pulse = true;
+                        timer = 0;
+                    }
                 }
+// как вариант можно менять масштаб => меньше анимации
+                /*if (timer < PULSE_PERIOD + 0.2f) {
+                    scale = 1.1f;
+                } else {
+                    if (timer < PULSE_PERIOD + 0.4f) {
+                        scale = 1;
+                    } else timer = 0;
+                }*/
             }
         }
         setHeightProportion(height);
-    }
-
-    @Override
-    public boolean touchDown(Vector2 touch, int pointer, int button) {
-        pulseAnimation = false;
-        return super.touchDown(touch, pointer, button);
     }
 }
