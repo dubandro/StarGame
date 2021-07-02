@@ -16,7 +16,7 @@ public class BaseScreen implements Screen, InputProcessor {
 
     protected SpriteBatch batch;
     private Rect screenBounds;
-    private Rect worldBounds;
+    protected Rect worldBounds;
     private Rect glBounds;
     private Matrix4 worldToGl;
     private Matrix3 screenToWorld;
@@ -24,14 +24,9 @@ public class BaseScreen implements Screen, InputProcessor {
 
     private Music music; // если одинаковая музыка для всех экранов
 
-    // Для передачи worldBounds по цепочке в методы которые ресайзят объекты не вначале, а по ходу игры
-    public Rect getWorldBounds() {
-        return worldBounds;
-    }
-
     @Override
     public void show() {
-        System.out.println("show");
+//        System.out.println("show");
         batch = new SpriteBatch();
         screenBounds = new Rect();
         worldBounds = new Rect();
@@ -51,7 +46,7 @@ public class BaseScreen implements Screen, InputProcessor {
 
     @Override
     public void resize(int width, int height) {
-        System.out.println("resize width = " + width + " height = " + height);
+//        System.out.println("resize width = " + width + " height = " + height);
         screenBounds.setSize(width, height);
         screenBounds.setLeft(0);
         screenBounds.setBottom(0);
@@ -65,49 +60,48 @@ public class BaseScreen implements Screen, InputProcessor {
     }
 
     public void resize(Rect worldBounds) {
-        System.out.println("resize worldBounds width = " + worldBounds.getWidth() + " worldBounds height = " + worldBounds.getHeight());
+//        System.out.println("resize worldBounds width = " + worldBounds.getWidth() + " worldBounds height = " + worldBounds.getHeight());
     }
 
     @Override
     public void pause() {
         music.pause();
-        System.out.println("pause");
+//        System.out.println("pause");
     }
 
     @Override
     public void resume() {
         music.play();
-        System.out.println("resume");
+//        System.out.println("resume");
     }
 
     @Override
     public void hide() {
-        System.out.println("hide");
         dispose();
+//        System.out.println("hide");
     }
 
     @Override
     public void dispose() {
-        System.out.println("dispose");
         music.dispose();
         batch.dispose();
     }
 
     @Override
     public boolean keyDown(int keycode) {
-        System.out.println("keyDown keycode = " + keycode);
+//        System.out.println("keyDown keycode = " + keycode);
         return false;
     }
 
     @Override
     public boolean keyUp(int keycode) {
-        System.out.println("keyUp keycode = " + keycode);
+//        System.out.println("keyUp keycode = " + keycode);
         return false;
     }
 
     @Override
     public boolean keyTyped(char character) {
-        System.out.println("keyTyped character = " + character);
+//        System.out.println("keyTyped character = " + character);
         return false;
     }
 
@@ -119,7 +113,7 @@ public class BaseScreen implements Screen, InputProcessor {
     }
 
     public boolean touchDown(Vector2 touch, int pointer, int button) {
-        System.out.println("touchDown touchX = " + touch.x + " touchY = " + touch.y);
+//        System.out.println("touchDown touchX = " + touch.x + " touchY = " + touch.y);
         return false;
     }
 
@@ -131,20 +125,20 @@ public class BaseScreen implements Screen, InputProcessor {
     }
 
     public boolean touchUp(Vector2 touch, int pointer, int button) {
-        System.out.println("touchUp touchX = " + touch.x + " touchY = " + touch.y);
+//        System.out.println("touchUp touchX = " + touch.x + " touchY = " + touch.y);
         return false;
     }
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
-        System.out.println("touchDragged screenX = " + screenX + " screenY = " + screenY);
+//        System.out.println("touchDragged screenX = " + screenX + " screenY = " + screenY);
         touch.set(screenX, screenBounds.getHeight() - screenY).mul(screenToWorld);
         touchDragged(touch, pointer);
         return false;
     }
 
     public boolean touchDragged(Vector2 touch, int pointer) {
-        System.out.println("touchDragged touchX = " + touch.x + " touchY = " + touch.y);
+//        System.out.println("touchDragged touchX = " + touch.x + " touchY = " + touch.y);
         return false;
     }
 
@@ -155,7 +149,7 @@ public class BaseScreen implements Screen, InputProcessor {
 
     @Override
     public boolean scrolled(float amountX, float amountY) {
-        System.out.println("scrolled amountX = " + amountX + " amountY = " + amountY);
+//        System.out.println("scrolled amountX = " + amountX + " amountY = " + amountY);
         return false;
     }
 }

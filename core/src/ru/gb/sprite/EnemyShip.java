@@ -8,6 +8,7 @@ import ru.gb.base.Ship;
 import ru.gb.math.Rect;
 import ru.gb.pool.BulletPool;
 import ru.gb.pool.ExplosionPool;
+import ru.gb.pool.ExtraPool;
 
 public class EnemyShip extends Ship {
 
@@ -29,8 +30,10 @@ public class EnemyShip extends Ship {
         bulletPos.set(pos.x, pos.y - getHalfHeight());
         if (getTop() < worldBounds.getTop()) {
             shipV.set(setV);
+            toFire = true;
         } else {
-            timer = rateOfFire * 0.8f; //TODO стрелять должен сразу
+            timer = rateOfFire - delta * 10;
+            toFire = false;
         }
         if (worldBounds.isOutside(this)) {
             destroy();
@@ -58,7 +61,6 @@ public class EnemyShip extends Ship {
         this.damage = damage;
         this.rateOfFire = reloadInterval;
         this.hp = hp;
-
         setHeightProportion(height);
         shipV.set(0, START_VY);
     }

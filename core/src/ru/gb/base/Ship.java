@@ -7,12 +7,14 @@ import com.badlogic.gdx.math.Vector2;
 import ru.gb.math.Rect;
 import ru.gb.pool.BulletPool;
 import ru.gb.pool.ExplosionPool;
+import ru.gb.pool.ExtraPool;
 import ru.gb.sprite.Bullet;
 import ru.gb.sprite.Explosion;
+import ru.gb.sprite.ExtraPower;
 
 public class Ship extends Sprite {
 
-    private static final float DAMAGE_ANIMATE_INTERVAL = 0.1f;
+    protected static final float DAMAGE_ANIMATE_INTERVAL = 0.1f;
 
     protected Rect worldBounds;
     protected BulletPool bulletPool;
@@ -30,7 +32,8 @@ public class Ship extends Sprite {
     protected Vector2 shipV;
 
     protected float timer;
-    private float damageAnimateTimer = DAMAGE_ANIMATE_INTERVAL;
+    protected boolean toFire;
+    protected float damageAnimateTimer = DAMAGE_ANIMATE_INTERVAL;
 
     public Ship() {
     }
@@ -42,10 +45,12 @@ public class Ship extends Sprite {
     @Override
     public void update(float delta) {
         pos.mulAdd(shipV, delta);
-        timer += delta;
-        if (timer >= rateOfFire) {
-            timer = 0;
-            shoot();
+        if (toFire) {
+            timer += delta;
+            if (timer >= rateOfFire) {
+                timer = 0;
+                shoot();
+            }
         }
         damageAnimateTimer += delta;
         if (damageAnimateTimer >= DAMAGE_ANIMATE_INTERVAL) {
@@ -79,9 +84,25 @@ public class Ship extends Sprite {
         return damage;
     }
 
+    public Vector2 getShipV() {
+        return shipV;
+    }
+
+    public int getHp() {
+        return hp;
+    }
+
+    public void setToFire(boolean toFire) {
+        this.toFire = toFire;
+    }
+
     private void boom() {
         Explosion explosion = explosionPool.obtain();
         explosion.set(this.pos, this.getHeight());
+    }
+
+    public void setBulletPos(Vector2 bulletPos) {
+        this.bulletPos.set(bulletPos);
     }
 
     public boolean isBulletCollision(Rect bullet) {

@@ -14,7 +14,6 @@ public class ExplosionPool extends SpritesPool<Explosion> {
     public ExplosionPool(TextureAtlas atlas, Sound explosionSound) {
         this.atlas = atlas;
         this.explosionSound = explosionSound;
-        System.out.println("ExplosionPool");
     }
 
     @Override

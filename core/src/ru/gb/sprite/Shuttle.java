@@ -1,6 +1,5 @@
 package ru.gb.sprite;
 
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -17,7 +16,7 @@ public class Shuttle extends Ship {
     private static final float PADDING = 0.03f;
     private static final int INVALID_POINTER = -1;
     private static final float FIRE_RATE = 0.2f;
-    private static final float BULLET_HEIGHT = 0.01f;
+    private static final float BULLET_HEIGHT = 0.008f;
     private static final float X_VELOCITY = 0.15f;
     private static final int SHUTTLE_HP = 10;
     private static final int SHUTTLE_DAMAGE = 1;
@@ -26,26 +25,66 @@ public class Shuttle extends Ship {
     private boolean pressedRight;
     private int leftPointer = INVALID_POINTER;
     private int rightPointer = INVALID_POINTER;
-    private boolean enemyDetected;
 
-    public void setEnemyDetected(boolean enemyDetected) {
-        this.enemyDetected = enemyDetected;
-    }
+    private int countShoot;
 
     public Shuttle(TextureAtlas atlas, BulletPool bulletPool, ExplosionPool explosionPool) {
         super(atlas.findRegion("main_ship"), 1, 2, 2);
         this.bulletPool = bulletPool;
         this.explosionPool = explosionPool;
+        this.damage = SHUTTLE_DAMAGE;
+        this.hp = SHUTTLE_HP;
         bulletRegion = atlas.findRegion("bulletMainShip");
         bulletV = new Vector2(0, 0.5f);
         bulletPos = new Vector2();
         bulletSound = Gdx.audio.newSound(Gdx.files.internal("sounds/laser.wav"));
         rateOfFire = FIRE_RATE;
         bulletHeight = BULLET_HEIGHT;
-        damage = SHUTTLE_DAMAGE;
-        hp = SHUTTLE_HP;
+
         setV = new Vector2(0.5f, 0);
         shipV = new Vector2();
+    }
+
+    public void startNewGame() {
+        this.hp = SHUTTLE_HP;
+        this.damage = SHUTTLE_DAMAGE;
+        this.bulletHeight = BULLET_HEIGHT;
+        this.pos.x = worldBounds.pos.x;
+        damageAnimateTimer = DAMAGE_ANIMATE_INTERVAL;
+        stop();
+        pressedLeft = false;
+        pressedRight = false;
+        leftPointer = INVALID_POINTER;
+        rightPointer = INVALID_POINTER;
+        toFire = false;
+        flushDestroy();
+    }
+
+    public void setDamage(int damage) {
+        if (damage != 0) {
+            this.damage = damage;
+            this.bulletHeight = BULLET_HEIGHT * damage;
+            countShoot = 0;
+            frame = 1;
+            damageAnimateTimer = 0f;
+        }
+    }
+
+    @Override
+    protected void shoot() {
+        super.shoot();
+        if (damage != SHUTTLE_DAMAGE) {
+            countShoot ++;
+            if (countShoot > 10) {
+                setDamage(SHUTTLE_DAMAGE);
+            }
+        }
+    }
+
+    public void setHp(int hp) {
+        this.hp += hp;
+        frame = 1;
+        damageAnimateTimer = 0f;
     }
 
     @Override
@@ -71,13 +110,6 @@ public class Shuttle extends Ship {
 
     public void dispose() {
         bulletSound.dispose();
-    }
-
-    @Override
-    protected void shoot() {
-        if (enemyDetected) {
-            super.shoot();
-        }
     }
 
     @Override
@@ -133,7 +165,9 @@ public class Shuttle extends Ship {
                 moveRight();
                 break;
             case Input.Keys.UP:
-                super.shoot(); // TODO решить что делать с одиночными выстрелами
+                if (!toFire) {
+                    super.shoot();
+                }
                 break;
         }
         return false;

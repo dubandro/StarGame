@@ -1,8 +1,6 @@
 package ru.gb.sprite;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.math.Vector2;
 
 import ru.gb.base.ScaledButton;
 import ru.gb.math.Rect;
@@ -17,11 +15,11 @@ public class ButtonNewGame extends ScaledButton {
     private float timer;
     private boolean pulse = true;
 
-    private final Game game;
+    private final GameScreen gameScreen;
 
-    public ButtonNewGame(TextureAtlas atlas, Game game) {
+    public ButtonNewGame(TextureAtlas atlas, GameScreen gameScreen) {
         super(atlas.findRegion("button_new_game"));
-        this.game = game;
+        this.gameScreen = gameScreen;
         height = NORMAL_HEIGHT * 0.1f;
     }
 
@@ -34,7 +32,7 @@ public class ButtonNewGame extends ScaledButton {
 
     @Override
     protected void action() {
-        game.setScreen(new GameScreen(game));
+        gameScreen.startNewGame();
     }
 
     public void animation(float delta) {

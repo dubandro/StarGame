@@ -15,7 +15,7 @@ public class EnemyEmitter {
 
     private static final float GENERATE_INTERVAL = 4f;
 
-    private static final float ENEMY_SMALL_HEIGHT = 0.08f;
+    private static final float ENEMY_SMALL_HEIGHT = 0.09f;
     private static final float ENEMY_SMALL_VY = -0.1f;
     private static final float ENEMY_SMALL_BULLET_HEIGHT = 0.01f;
     private static final float ENEMY_SMALL_BULLET_VY = ENEMY_SMALL_VY - 0.15f;
@@ -25,21 +25,22 @@ public class EnemyEmitter {
 
     private static final float ENEMY_MEDIUM_HEIGHT = 0.09f;
     private static final float ENEMY_MEDIUM_VY = -0.075f;
-    private static final float ENEMY_MEDIUM_BULLET_HEIGHT = 0.02f;
+    private static final float ENEMY_MEDIUM_BULLET_HEIGHT = 0.015f;
     private static final float ENEMY_MEDIUM_BULLET_VY = ENEMY_MEDIUM_VY - 0.1f;
-    private static final int ENEMY_MEDIUM_DAMAGE = 5;
+    private static final int ENEMY_MEDIUM_DAMAGE = 2;
     private static final float ENEMY_MEDIUM_FIRE_RATE = 2f;
     private static final int ENEMY_MEDIUM_HP = 5;
 
-    private static final float ENEMY_BIG_HEIGHT = 0.1f;
+    private static final float ENEMY_BIG_HEIGHT = 0.09f;
     private static final float ENEMY_BIG_VY = -0.05f;
-    private static final float ENEMY_BIG_BULLET_HEIGHT = 0.03f;
+    private static final float ENEMY_BIG_BULLET_HEIGHT = 0.02f;
     private static final float ENEMY_BIG_BULLET_VY = ENEMY_BIG_VY - 0.1f;
-    private static final int ENEMY_BIG_DAMAGE = 10;
+    private static final int ENEMY_BIG_DAMAGE = 3;
     private static final float ENEMY_BIG_FIRE_RATE = 3f;
     private static final int ENEMY_BIG_HP = 10;
     private final Sound ENEMY_BIG_BULLET_SOUND = Gdx.audio.newSound(Gdx.files.internal("sounds/bullet.wav"));
 
+    private int level = 1;
 
     private float generateTimer;
 
@@ -68,7 +69,13 @@ public class EnemyEmitter {
         enemyBigV = new Vector2(0, ENEMY_BIG_VY);
     }
 
-    public void generate(float delta) {
+    public int getLevel() {
+        return level;
+    }
+
+    public void generate(float delta, int frags) {
+        level = frags / 10 + 1;
+        int deltaHeight = level / 1000;
         generateTimer += delta;
         if (generateTimer >= GENERATE_INTERVAL) {
             generateTimer = 0f;
@@ -80,9 +87,9 @@ public class EnemyEmitter {
                         enemySmallV,
                         bulletRegion,
                         ENEMY_BIG_BULLET_SOUND,
-                        ENEMY_SMALL_BULLET_HEIGHT,
+                        ENEMY_SMALL_BULLET_HEIGHT + deltaHeight,
                         ENEMY_SMALL_BULLET_VY,
-                        ENEMY_SMALL_DAMAGE,
+                        ENEMY_SMALL_DAMAGE + level,
                         ENEMY_SMALL_FIRE_RATE,
                         ENEMY_SMALL_HEIGHT,
                         ENEMY_SMALL_HP
@@ -93,9 +100,9 @@ public class EnemyEmitter {
                         enemyMediumV,
                         bulletRegion,
                         ENEMY_BIG_BULLET_SOUND,
-                        ENEMY_MEDIUM_BULLET_HEIGHT,
+                        ENEMY_MEDIUM_BULLET_HEIGHT + deltaHeight,
                         ENEMY_MEDIUM_BULLET_VY,
-                        ENEMY_MEDIUM_DAMAGE,
+                        ENEMY_MEDIUM_DAMAGE + level,
                         ENEMY_MEDIUM_FIRE_RATE,
                         ENEMY_MEDIUM_HEIGHT,
                         ENEMY_MEDIUM_HP
@@ -106,9 +113,9 @@ public class EnemyEmitter {
                         enemyBigV,
                         bulletRegion,
                         ENEMY_BIG_BULLET_SOUND,
-                        ENEMY_BIG_BULLET_HEIGHT,
+                        ENEMY_BIG_BULLET_HEIGHT + deltaHeight,
                         ENEMY_BIG_BULLET_VY,
-                        ENEMY_BIG_DAMAGE,
+                        ENEMY_BIG_DAMAGE + level,
                         ENEMY_BIG_FIRE_RATE,
                         ENEMY_BIG_HEIGHT,
                         ENEMY_BIG_HP
@@ -117,6 +124,7 @@ public class EnemyEmitter {
             float enemyHalfWidth = enemyShip.getHalfWidth();
             enemyShip.pos.x = Rnd.nextFloat(worldBounds.getLeft() + enemyHalfWidth, worldBounds.getRight() - enemyHalfWidth);
             enemyShip.setBottom(worldBounds.getTop());
+            enemyShip.setBulletPos(enemyShip.pos);
         }
     }
 
