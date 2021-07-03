@@ -197,6 +197,7 @@ public class GameScreen extends BaseScreen {
                 if (shuttle.isMe(extraPower.pos)) {
                     shuttle.setDamage(extraPower.getDamage());
                     shuttle.setHp(extraPower.getHp());
+                    Gdx.input.vibrate(200);
                     extraPower.destroy();
                 }
             }
@@ -238,12 +239,16 @@ public class GameScreen extends BaseScreen {
                     if (shuttle.isMe(bullet.pos)) {
 //                    if (shuttle.isBulletCollision(bullet)) {
                         shuttle.damage(bullet.getDamage());
+                        Gdx.input.vibrate(50);
                         bullet.destroy();
                     }
                 }
             }
         }
-        if (shuttle.isDestroyed()) state = State.GAME_OVER;
+        if (shuttle.isDestroyed()) {
+            state = State.GAME_OVER;
+            Gdx.input.vibrate(new long[] {0, 500, 110, 500, 110, 450, 110, 200, 110, 170, 40, 450, 110, 200, 110, 170, 40, 500}, -1);
+        }
     }
 
     private void freeAllDestroyed() {
@@ -307,6 +312,12 @@ public class GameScreen extends BaseScreen {
         } else {
             newGame.touchUp(touch, pointer, button);
         }
+        return false;
+    }
+
+    @Override
+    public boolean touchDragged(Vector2 touch, int pointer) {
+        shuttle.touchDragged(touch, pointer);
         return false;
     }
 

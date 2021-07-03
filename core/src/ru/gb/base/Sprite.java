@@ -66,6 +66,10 @@ public class Sprite extends Rect {
         return false;
     }
 
+    public boolean touchDragged(Vector2 touch, int pointer) {
+        return false;
+    }
+
     public boolean keyDown(int keycode) {
         return false;
     }
